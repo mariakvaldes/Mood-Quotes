@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mood Quotes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f0e6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #fff;
+      padding: 2.5rem 2.8rem;
+      border-radius: 20px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      color: #2c3e50;
+      letter-spacing: 0.5px;
+    }
+    select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      border: 1.5px solid #d0d7e2;
+      font-size: 1.05rem;
+      margin-bottom: 1.8rem;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease;
+      background: #fdfdfd;
+      color: #333;
+    }
+    select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(124, 180, 249, 0.35);
+    }
+    button {
+      background: #4a90e2;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      font-size: 1.1rem;
+      color: white;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+    }
+    button:hover {
+      background: #3a7bd5;
+      transform: translateY(-2px);
+    }
+    .quote-box {
+      margin-top: 2rem;
+      font-style: italic;
+      font-size: 1.2rem;
+      line-height: 1.5;
+      min-height: 90px;
+      position: relative;
+      color: #2c3e50;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+    .quote-box.fade-in {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    .quote-box::before {
+      content: "“";
+      font-size: 3rem;
+      position: absolute;
+      top: -15px;
+      left: -15px;
+      color: rgba(180, 180, 180, 0.3);
+    }
+    .quote-author {
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #7b8a99;
+    }
+    .error {
+      color: #e53e3e;
+      margin-top: 1.2rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Mood Quotes</h1>
+    <select id="mood-select" aria-label="Select your mood">
+      <option value="" disabled selected>Select your mood</option>
+      <option value="happy">Happy</option>
+      <option value="sad">Sad</option>
+      <option value="stressed">Stressed</option>
+      <option value="tired">Tired</option>
+      <option value="motivated">Motivated</option>
+      <option value="anxious">Anxious</option>
+      <option value="confident">Confident</option>
+    </select>
+    <button id="get-quote-btn">Get Quote</button>
+    <div id="quote-container" class="quote-box"></div>
+    <div id="error-message" class="error"></div>
+  </div>
+
+<script>
+  const quotes = {
+    happy: [
+      { text: "Happiness is not by chance, but by choice.", author: "Jim Rohn" },
+      { text: "The most wasted of all days is one without laughter.", author: "E.E. Cummings" },
+      { text: "Joy is what happens to us when we allow ourselves to recognize how good things really are.", author: "Marianne Williamson" },
+      { text: "Count your age by friends, not years. Count your life by smiles, not tears.", author: "John Lennon" }
+    ],
+    sad: [
+      { text: "Tough times never last, but tough people do.", author: "Robert H. Schuller" },
+      { text: "Stars can't shine without darkness.", author: "Unknown" },
+      { text: "Every storm runs out of rain.", author: "Maya Angelou" },
+      { text: "The wound is the place where the light enters you.", author: "Rumi" }
+    ],
+    stressed: [
+      { text: "You don't have to control your thoughts. You just have to stop letting them control you.", author: "Dan Millman" },
+      { text: "Almost everything will work again if you unplug it for a few minutes, including you.", author: "Anne Lamott" },
+      { text: "Stress is caused by being 'here' but wanting to be 'there'.", author: "Eckhart Tolle" },
+      { text: "Take a deep breath. It's just a bad day, not a bad life.", author: "Unknown" }
+    ],
+    tired: [
+      { text: "Rest when you're weary. Refresh and renew yourself.", author: "Ralph Marston" },
+      { text: "Take time to do what makes your soul happy.", author: "Unknown" },
+      { text: "Sometimes the most productive thing you can do is relax.", author: "Mark Black" },
+      { text: "Sleep is the best meditation.", author: "Dalai Lama" }
+    ],
+    motivated: [
+      { text: "Don’t watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+      { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+      { text: "Success is not final, failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill" },
+      { text: "Hardships often prepare ordinary people for an extraordinary destiny.", author: "C.S. Lewis" }
+    ],
+    anxious: [
+      { text: "You are not your anxiety.", author: "Unknown" },
+      { text: "This too shall pass.", author: "Persian Proverb" },
+      { text: "Do not anticipate trouble, or worry about what may never happen.", author: "Benjamin Franklin" },
+      { text: "Feelings are just visitors. Let them come and go.", author: "Mooji" }
+    ],
+    confident: [
+      { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+      { text: "Confidence comes not from always being right but from not fearing to be wrong.", author: "Peter T. Mcintyre" },
+      { text: "With confidence, you have won before you have started.", author: "Marcus Garvey" },
+      { text: "Self-confidence is the best outfit. Rock it and own it.", author: "Unknown" }
+    ]
+  };
+
+  const moodSelect = document.getElementById("mood-select");
+  const getQuoteBtn = document.getElementById("get-quote-btn");
+  const quoteContainer = document.getElementById("quote-container");
+  const errorMessage = document.getElementById("error-message");
+
+  getQuoteBtn.addEventListener("click", () => {
+    errorMessage.textContent = "";
+    quoteContainer.classList.remove("fade-in");
+    const mood = moodSelect.value;
+    if (!mood) {
+      quoteContainer.textContent = "";
+      errorMessage.textContent = "Please select a mood to get a quote.";
+      return;
+    }
+    const moodQuotes = quotes[mood];
+    const randomQuote = moodQuotes[Math.floor(Math.random() * moodQuotes.length)];
+    quoteContainer.innerHTML = `<p>${randomQuote.text}</p><div class="quote-author">— ${randomQuote.author}</div>`;
+    void quoteContainer.offsetWidth;
+    quoteContainer.classList.add("fade-in");
+  });
+</script>
+</body>
+</html>
